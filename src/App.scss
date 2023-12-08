@@ -24,5 +24,124 @@
   width: 100%;
   height: 100%;
   background-size: cover;
+  position: absolute;
   background-position: center;
 }
+
+.box-section {
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.3); /* 배경 색상 및 투명도 조절 */
+  z-index: 2; /* 다른 요소들 위에 나타나도록 z-index 설정 */
+}
+
+.box1 {
+  text-align: center;
+  display: flex;
+  height: 10vh;
+  width: 100vw;
+  flex-direction: row;
+  justify-content: space-between;
+
+  .sub1 {
+    width: 15vw;
+    height: 100%;
+  }
+
+  .sub2 {
+    width: 30vw;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: center;
+  
+    .hb1, .hb2, .hb3, .hb4 {
+      position: relative;
+      width: 20%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  
+      &:hover {
+        text-decoration: underline;
+      }
+  
+      &.clicked {
+        background-color: #f1f1f1; /* 클릭 시 배경색 변경 */
+      }
+    }
+  
+    .hb1.clicked + .top-bar.bar1,
+    .hb2.clicked + .top-bar.bar2,
+    .hb3.clicked + .top-bar.bar3,
+    .hb4.clicked + .top-bar.bar4 {
+      opacity: 1; /* 클릭 시 top-bar 투명도 증가 */
+    }
+  
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 20vh;
+      background-color: white;
+      z-index: 3;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+  
+    .bar1, .bar2, .bar3, .bar4 {
+      background-color: white;
+    }
+  }
+  
+  
+  .sub3 {
+    width: 15vw;
+    height: 100%;
+  }
+}
+
+
+
+.box2 {
+  display:flex;
+  color:white;
+  width:20vw;
+  height:20vh;
+  font-size: 5vw;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;  // 초기에 투명하게 설정
+  transition: opacity 1s ease;  //
+}
+
+.box2.visible {
+  opacity: 1;  // 나타날 때의 투명도
+}
+
+
+.box3 {
+  display:flex;
+  color:white;
+  margin-top:50vh;
+  width:25vw;
+  height:8vh;
+  text-align: center;
+  font-size: 2vw;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid white;
+}
+
+
