@@ -1,6 +1,3 @@
-// MainPage 컴포넌트를 추가하고 내보내는 부분이 누락되어 있습니다.
-// MainPage.tsx
-
 import React, { useState, useEffect } from 'react';
 import { SectionsContainer, Section } from 'react-fullpage';
 import { useNavigate } from 'react-router-dom';
@@ -21,25 +18,41 @@ const options = {
 };
 const boxTexts = ["차량", "부속품", "충전", "고객센터"];
 const BoxSection = () => {
-  const [clickedBox, setClickedBox] = useState<number | null>(null);
+  const [hbClickedBoxes, setHbClickedBoxes] = useState([false, false, false, false]);
   const [isBox2Visible, setBox2Visibility] = useState(false);
   const navigate = useNavigate();  // 변경된 부분
 
-  const handleClick = (boxNumber: number) => {
-    setClickedBox((prevClickedBox) => (prevClickedBox === boxNumber ? null : boxNumber));
+  const handleHbClick = (boxNumber : any) => {
+    setHbClickedBoxes((prev) => {
+      const newState = [...prev];
+      newState[boxNumber - 1] = !newState[boxNumber - 1];
+      return newState;
+    });
   };
 
-  const handleMenuClick = (boxNumber: number) => {
-    // top-bar의 메뉴를 클릭할 때 페이지 이동
-    navigate(`/product${boxNumber}`);
+  const handleMenuClick = (menuItem: number, boxNumber: number) => {
+    // 각 boxNumber에 따라서 적절한 product로 이동
+    const getProductNumber = (menuNumber: number) => {
+      switch (boxNumber) {
+        case 1:
+          return menuNumber; // top-bar-1은 product 1,2,3
+        case 2:
+          return menuNumber + 3; // top-bar-2는 product 4,5,6
+        case 3:
+          return menuNumber + 6; // top-bar-3은 product 7,8,9
+        default:
+          return 0; // 예외 처리
+      }
+    };
+  
+    navigate(`/product${getProductNumber(menuItem)}`);
   };
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
+    const handleClickOutside = (event : any) => {
+      const target = event.target;
       if (!target.closest('.sub2')) {
-        // .sub2 영역 외의 부분을 클릭했을 때 clickedBox 초기화
-        setClickedBox(null);
+        setHbClickedBoxes([false, false, false, false]);
       }
     };
 
@@ -59,38 +72,67 @@ const BoxSection = () => {
     return () => clearTimeout(timer);
   }, []);
   
+  const renderMenuContent = (boxNumber : any ) => {
+    switch (boxNumber) {
+      case 1:
+        return [1, 2, 3].map((menuItem) => (
+          <div
+            key={menuItem}
+            className="menu-item"
+            onClick={() => handleMenuClick(menuItem , boxNumber)}
+          >
+            메뉴 항목 {menuItem}
+          </div>
+        ));
+      case 2:
+        return [1, 2, 3].map((menuItem) => (
+          <div
+            key={menuItem}
+            className="menu-item"
+            onClick={() => handleMenuClick(menuItem , boxNumber)}
+          >
+            자동차 {menuItem}
+          </div>
+        ));
+      case 3:
+        return [1, 2, 3].map((menuItem) => (
+          <div
+            key={menuItem}
+            className="menu-item"
+            onClick={() => handleMenuClick(menuItem , boxNumber)}
+          >
+            우주선 {menuItem}
+          </div>
+        ));
+      // Add more cases for other boxNumbers if needed
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="box-section">
       <div className="box1">
         <div className="sub1"></div>
         <div className="sub2">
-          {[1, 2, 3, 4].map((boxNumber) => (
-            <React.Fragment key={boxNumber}>
-              <div
-                className={`hb${boxNumber} ${clickedBox === boxNumber ? 'clicked' : ''}`}
-                onClick={() => handleClick(boxNumber)}
-              >
-                {boxTexts[boxNumber - 1]}
+      {[1, 2, 3, 4].map((boxNumber) => (
+        <React.Fragment key={boxNumber}>
+          <div
+            className={`hb${boxNumber} ${hbClickedBoxes[boxNumber - 1] ? 'clicked' : ''}`}
+            onClick={() => handleHbClick(boxNumber)}
+          >
+            {boxTexts[boxNumber - 1]}
+          </div>
+          {hbClickedBoxes[boxNumber - 1] && (
+            <div className={`top-bar bar${boxNumber}`}>
+              <div className="menu">
+                {renderMenuContent(boxNumber)}
               </div>
-              {clickedBox === boxNumber && (
-                <div className={`top-bar bar${boxNumber}`}>
-                  <div className="menu">
-                    {[1, 2, 3].map((menuItem) => (
-                      <div
-                        key={menuItem}
-                        className="menu-item"
-                        onClick={() => handleMenuClick(menuItem)}
-                      >
-                        메뉴 항목 {menuItem}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </React.Fragment>
-          ))}
-        </div>
+            </div>
+          )}
+        </React.Fragment>
+      ))}
+    </div>
         <div className="sub3"></div>
 
       </div>
